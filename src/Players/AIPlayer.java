@@ -1,6 +1,7 @@
 package Players;
 
 import Utilities.Move;
+import Utilities.OurStateTree;
 import Utilities.StateTree;
 
 public class AIPlayer extends Player {
@@ -14,6 +15,7 @@ public class AIPlayer extends Player {
 	 */
 	@Override
 	public Move getMove(StateTree state) {
+		OurStateTree myState = new OurStateTree (state, this.turn);
 		// TODO Auto-generated method stub
 		return null;
 	}
