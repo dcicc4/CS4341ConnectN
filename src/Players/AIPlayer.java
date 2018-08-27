@@ -27,10 +27,10 @@ public class AIPlayer extends Player {
 
 		if (state.isMyTurn) { // containsVictory checks if the state has connectedNeeded number of tiles in
 								// row for AI
-			if (this.containsWinForPlayerNumber(this.turn, state.getBoardMatrix()))
+			if (this.containsWinForPlayerNumber(this.turn, state))
 				return 1;
 		} else {
-			if (this.containsWinForPlayerNumber(Math.abs(3-this.turn), state.getBoardMatrix())) // containsDefeat checks if the state has connectedNeeded number of tiles in row
+			if (this.containsWinForPlayerNumber(Math.abs(3-this.turn), state)) // containsDefeat checks if the state has connectedNeeded number of tiles in row
 										// for opponent
 				return -1;
 		}
@@ -68,9 +68,58 @@ public class AIPlayer extends Player {
 		return value;
 	}
 
-	private boolean containsWinForPlayerNumber(int abs, int[][] boardMatrix) {
-		// TODO Auto-generated method stub
+	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
+		if (state.lastMove.getPop()) {
+			//TODO implement pop check
+		}else {
+			//TODO check diagnols 
+			return checkVertical(playerNumber, state) || checkLeftHorizontal(playerNumber, state) || checkRightHorizontal(playerNumber,state);
+		}
+
 		return false;
 	}
+private boolean checkLeftHorizontal(int playerNumber, OurStateTree state) {
+	int column = state.lastMove.getColumn();
+	int row = state.getRowForLastMove();
+	if (column < state.winNumber - 1 ) {
+		return false;
+	}
+	for (int i = column; i>(column - state.winNumber); i--) {
+		if(state.getBoardMatrix()[row][i]!= playerNumber) {
+			return false;
+		}
+	}
+	return true;
+	}
+
+private boolean checkRightHorizontal(int playerNumber, OurStateTree state) {
+	int column = state.lastMove.getColumn();
+	int row = state.getRowForLastMove();
+	if (state.columns - column < state.winNumber) {
+		return false;
+	}
+	for (int i = column; i<(column + state.winNumber); i++) {
+		if(state.getBoardMatrix()[row][i]!= playerNumber) {
+			return false;
+		}
+	}
+	return true;
+	}
+
+
+	private boolean checkVertical(int playerNumber, OurStateTree state) {
+		int column = state.lastMove.getColumn();
+		int row = state.getRowForLastMove();
+		if (row < state.winNumber - 1 ) {
+			return false;
+		}
+		for (int i = row; i>(row - state.winNumber); i--) {
+			if(state.getBoardMatrix()[i][column]!= playerNumber) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 
 }

@@ -2,9 +2,10 @@ package Utilities;
 
 import java.util.LinkedList;
 
-public class OurStateTree extends StateTree{
+public class OurStateTree extends StateTree {
 	public boolean isMyTurn;
-
+	public Move lastMove;
+	private Integer lastMoveRow;
 
 	public OurStateTree(StateTree t, int playerNumber) {
 		super(t.rows, t.columns, t.winNumber, t.turn, t.pop1, t.pop2, t);
@@ -33,6 +34,16 @@ public class OurStateTree extends StateTree{
 		return null;
 	}
 
-	
+	public int getRowForLastMove() {
+		if (lastMoveRow == null) {
+			int tempVal;
+			int index = 0;
+			do {
+				tempVal = boardMatrix[index][lastMove.getColumn()];
+			} while (tempVal != 0);
+			lastMoveRow = index - 1;
+		}
+		return lastMoveRow;
+	}
 
 }
