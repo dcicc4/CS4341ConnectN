@@ -61,20 +61,87 @@ public class AIPlayer extends Player {
 	}
 
 	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
-		if (state.lastMove.getPop()) {
-			// TODO implement pop check
+		int row = state.getRowForLastMove();
+		if (state.lastMove.getPop()) { //for pop check if each piece in that column is now a victory
+			boolean popValid = true;
+			for (int i = 0;  i < row; i++) {
+				popValid = popValid || checkLeftHorizontal(playerNumber, state, i)
+						|| checkRightHorizontal(playerNumber, state, i) || checkLeftDown(playerNumber, state, i)
+						|| checkLeftUp(playerNumber, state, i) || checkRightUp(playerNumber, state, i)
+						|| checkRightDown(playerNumber, state, i);
+			}
+			return popValid;
 		} else {
-			// TODO check diagnols
-			return checkVertical(playerNumber, state) || checkLeftHorizontal(playerNumber, state)
-					|| checkRightHorizontal(playerNumber, state);
+			return checkVertical(playerNumber, state, row) || checkLeftHorizontal(playerNumber, state, row)
+					|| checkRightHorizontal(playerNumber, state, row) || checkLeftDown(playerNumber, state, row)
+					|| checkLeftUp(playerNumber, state, row) || checkRightUp(playerNumber, state, row)
+					|| checkRightDown(playerNumber, state, row);
 		}
 
-		return false;
 	}
 
-	private boolean checkLeftHorizontal(int playerNumber, OurStateTree state) {
+	private boolean checkLeftDown(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
-		int row = state.getRowForLastMove();
+		if (column < state.winNumber - 1 || row < state.winNumber - 1) {
+			return false;
+		}
+		int j = row;
+		for (int i = column; i > (column - state.winNumber); i--) {
+			if (state.getBoardMatrix()[j][i] != playerNumber) {
+				return false;
+			}
+			j--;
+		}
+		return true;
+	}
+
+	private boolean checkRightDown(int playerNumber, OurStateTree state, int row) {
+		int column = state.lastMove.getColumn();
+		if (state.columns - column < state.winNumber || row < state.winNumber - 1) {
+			return false;
+		}
+		int j = row;
+		for (int i = column; i < (column + state.winNumber); i++) {
+			if (state.getBoardMatrix()[j][i] != playerNumber) {
+				return false;
+			}
+			j--;
+		}
+		return true;
+	}
+
+	private boolean checkLeftUp(int playerNumber, OurStateTree state, int row) {
+		int column = state.lastMove.getColumn();
+		if (column < state.winNumber - 1 || state.rows - row < state.winNumber) {
+			return false;
+		}
+		int j = row;
+		for (int i = column; i > (column - state.winNumber); i--) {
+			if (state.getBoardMatrix()[j][i] != playerNumber) {
+				return false;
+			}
+			j++;
+		}
+		return true;
+	}
+
+	private boolean checkRightUp(int playerNumber, OurStateTree state, int row) {
+		int column = state.lastMove.getColumn();
+		if (state.columns - column < state.winNumber || state.rows - row < state.winNumber) {
+			return false;
+		}
+		int j = row;
+		for (int i = column; i < (column + state.winNumber); i++) {
+			if (state.getBoardMatrix()[j][i] != playerNumber) {
+				return false;
+			}
+			j++;
+		}
+		return true;
+	}
+
+	private boolean checkLeftHorizontal(int playerNumber, OurStateTree state, int row) {
+		int column = state.lastMove.getColumn();
 		if (column < state.winNumber - 1) {
 			return false;
 		}
@@ -86,9 +153,8 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
-	private boolean checkRightHorizontal(int playerNumber, OurStateTree state) {
+	private boolean checkRightHorizontal(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
-		int row = state.getRowForLastMove();
 		if (state.columns - column < state.winNumber) {
 			return false;
 		}
@@ -100,9 +166,8 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
-	private boolean checkVertical(int playerNumber, OurStateTree state) {
+	private boolean checkVertical(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
-		int row = state.getRowForLastMove();
 		if (row < state.winNumber - 1) {
 			return false;
 		}
