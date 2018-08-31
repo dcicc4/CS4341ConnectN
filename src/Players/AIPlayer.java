@@ -36,28 +36,30 @@ public class AIPlayer extends Player {
 				// for opponent
 				return -1;
 		}
-		int value = 0;
+
 
 		LinkedList<Integer> values = new LinkedList<Integer>();
-
-		for (OurStateTree aState : state.getStatesAfterValidMoves()) {
+		LinkedList<OurStateTree> states = state.getStatesAfterValidMoves();
+		if(states.isEmpty()) { //if tie return 0
+			return 0;
+		}
+		for (OurStateTree aState : states) {
 			if (state.isMyTurn) {
-				int currentValue = getValueOfState(aState, null, max);
+				int currentValue = getValueOfState(aState, min, max);
 				values.push(currentValue);
-				if (min != null && value >= min) {
+				if ((min != null && currentValue >= min) || (max != null && currentValue <= max))
 					return currentValue;
-				}
 				max = Collections.max(values);
 			} else {
-				int currentValue = getValueOfState(aState, min, null);
+				int currentValue = getValueOfState(aState, min, max);
 				values.push(currentValue);
-				if (max != null && value <= max)
+				if ((min != null && currentValue >= min) || (max != null && currentValue <= max))
 					return currentValue;
 				min = Collections.min(values);
 			}
-			return state.isMyTurn ? max : min;
+			
 		}
-		return value;
+		return state.isMyTurn ? max : min;
 	}
 
 	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
