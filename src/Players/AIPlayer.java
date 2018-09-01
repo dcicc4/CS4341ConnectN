@@ -1,6 +1,7 @@
 package Players;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import Utilities.Move;
@@ -18,9 +19,13 @@ public class AIPlayer extends Player {
 	 */
 	@Override
 	public Move getMove(StateTree state) {
+		HashMap<Integer, OurStateTree> map = new HashMap<Integer, OurStateTree>();
 		OurStateTree myState = new OurStateTree(state, this.turn);
-		// TODO Auto-generated method stub
-		return null;
+		for (OurStateTree aState: myState.getStatesAfterValidMoves()) {
+			map.put(this.getValueOfState(aState, null, null), aState);
+		}
+		Integer max = Collections.max(map.keySet());
+		return map.get(max).lastMove;
 	}
 
 	public int getValueOfState(OurStateTree state, Integer min, Integer max) {
@@ -31,8 +36,7 @@ public class AIPlayer extends Player {
 				return 1;
 		} else {
 			if (this.containsWinForPlayerNumber(Math.abs(3 - this.turn), state)) // containsDefeat checks if the state
-																					// has connectedNeeded number of
-																					// tiles in row
+																					// has connectedN																// tiles in row
 				// for opponent
 				return -1;
 		}

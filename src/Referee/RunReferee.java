@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import Players.AIPlayer;
 import Players.Player;
 import Players.SimplePlayer1;
 import Players.SimplePlayer2;
@@ -18,16 +19,16 @@ public class RunReferee {
 		
 		// Match parameter
 		// You can modify them
-		int timeLimit = 10;
-		int boardRows = 6;
-		int boardColumns = 7;
-		int winNumber = 4;
+		int timeLimit = 100;
+		int boardRows = 3;
+		int boardColumns = 3;
+		int winNumber = 3;
 		int battleDurationLimit = 3600;
 		// End of modifications
 		
 		
 		
-		Player player1 = (Player) new SimplePlayer1("SimplePlayer1", 1, timeLimit);
+		Player player1 = (Player) new AIPlayer("SimplePlayer1", 1, timeLimit);
 		Player player2 = (Player) new SimplePlayer2("SimplePlayer2", 2, timeLimit);
 
 		Referee referee = new Referee();
