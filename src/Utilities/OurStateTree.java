@@ -36,20 +36,15 @@ public class OurStateTree extends StateTree {
 		//TODO swap to one big looop
 		for (int i=0; i < this.columns; i++){
 			//if at least the top row for that column is empty, drop a piece there and add that state to the list
-			if (this.boardMatrix[this.rows][i] == 0){ //TODO swap for isvalid
+			if (validMove(new Move(false, i))){
 				stateList.add(new OurStateTree(this, turn));
+				stateList.getLast().lastMove = new Move(false, i);
 				stateList.getLast().makeMove(new Move(false, i));
-				//call this.isValidMove or something like that
 			}
-		}
-		//next, check if pop is allowed. If so, second loop for pop moves
-		if ((!pop1 && turn == 1) || (!pop2 && turn == 2)) {
-			for (int i = 0; i < this.columns; i++) {
-				//if the bottom piece for the column is ours. If so, pop that and add that state to the list
-				if (this.boardMatrix[0][i] == turn) {
-					stateList.add(new OurStateTree(this, turn));
-					stateList.getLast().makeMove(new Move(true, i));
-				}
+			if (validMove(new Move(true, i))){
+				stateList.add(new OurStateTree(this, turn));
+				stateList.getLast().lastMove = new Move(true, i);
+				stateList.getLast().makeMove(new Move(true, i));
 			}
 		}
 		return stateList;
