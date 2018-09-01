@@ -23,14 +23,14 @@ public class AIPlayer extends Player {
 		HashMap<Integer, OurStateTree> map = new HashMap<Integer, OurStateTree>();
 		OurStateTree myState = new OurStateTree(state, this.turn);
 		for (OurStateTree aState: myState.getStatesAfterValidMoves()) {
-			map.put(this.getValueOfState(aState, null, null), aState);
+			map.put(this.getValueOfState(aState, null, null,0), aState);
 		}
 		Integer max = Collections.max(map.keySet());
 		System.out.println(max);
 		return map.get(max).lastMove;
 	}
+	public int getValueOfState(OurStateTree state, Integer min, Integer max, int depth) {
 
-	public int getValueOfState(OurStateTree state, Integer min, Integer max) {
 			if (this.containsWinForPlayerNumber(Math.abs(3-state.turn), state)) { // containsDefeat checks if the state
 				//state.display();
 				if (0==Referee.checkForWinner(state)) {
@@ -45,13 +45,13 @@ public class AIPlayer extends Player {
 		if(states.isEmpty()) { //if tie return 0
 			return 0;
 		}
+		if (true){} //TODO add heuristic
 		Integer minLower = min;
-		
 		Integer maxLower = max;
 
 		for (OurStateTree aState : states) {
 			if (aState.turn != this.turn) {
-				int currentValue = getValueOfState(aState, minLower, maxLower);
+				int currentValue = getValueOfState(aState, minLower, maxLower, depth++);
 				values.push(currentValue);
 				if (minLower != null && currentValue < minLower) {
 					minLower = currentValue;
@@ -60,7 +60,7 @@ public class AIPlayer extends Player {
 					return currentValue;
 				}
 			} else {
-				int currentValue = getValueOfState(aState, minLower, maxLower);
+				int currentValue = getValueOfState(aState, minLower, maxLower, depth++);
 				values.push(currentValue);
 				if (maxLower != null && currentValue > maxLower) {
 					maxLower = currentValue;

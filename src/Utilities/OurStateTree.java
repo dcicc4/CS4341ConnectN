@@ -30,15 +30,15 @@ public class OurStateTree extends StateTree {
 	public LinkedList<OurStateTree> getStatesAfterValidMoves() {
 		// creating the list for all the  states
 		LinkedList<OurStateTree> stateList = new LinkedList<>();
-		//loops through each column
-		//TODO swap to one big looop
+		//loops through each column. First makes drop moves, then checks and makes pop moves if possible.
 		for (int i=0; i < this.columns; i++){
-			//if at least the top row for that column is empty, drop a piece there and add that state to the list
+			//if the column is a valid move, drop a piece there and add that state to the list
 			if (validMove(new Move(false, i))){
 				stateList.add(new OurStateTree(this, turn));
 				stateList.getLast().lastMove = new Move(false, i);
 				stateList.getLast().makeMove(new Move(false, i));
 			}
+			//if the column is a valid move, pop the bottom piece there and add that state to the list
 			if (validMove(new Move(true, i))){
 				stateList.add(new OurStateTree(this, turn));
 				stateList.getLast().lastMove = new Move(true, i);
