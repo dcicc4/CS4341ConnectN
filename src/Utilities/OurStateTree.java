@@ -3,20 +3,18 @@ package Utilities;
 import java.util.LinkedList;
 
 public class OurStateTree extends StateTree {
-	public boolean isMyTurn;
 	public Move lastMove;
 	private Integer lastMoveRow;
 
 	public OurStateTree(StateTree t, int playerNumber) {
 		super(t.rows, t.columns, t.winNumber, t.turn, t.pop1, t.pop2, t);
 		this.copyIntoBoardMatrix(t.getBoardMatrix());
-		isMyTurn = (t.turn == playerNumber);
 	}
 
 	public OurStateTree(OurStateTree t) {
 		super(t.rows, t.columns, t.winNumber, t.turn, t.pop1, t.pop2, t);
 		this.copyIntoBoardMatrix(t.boardMatrix);
-		isMyTurn = t.isMyTurn;
+
 
 	}
 
@@ -55,11 +53,24 @@ public class OurStateTree extends StateTree {
 			int tempVal;
 			int index = 0;
 			do {
-				tempVal = boardMatrix[index][lastMove.getColumn()];
+				if (index != boardMatrix.length) {
+					tempVal = boardMatrix[index][lastMove.getColumn()];
+				}else {
+					tempVal = 0;
+				}
+				index ++;
 			} while (tempVal != 0);
-			lastMoveRow = index - 1;
+			lastMoveRow = index - 2;
 		}
 		return lastMoveRow;
+	}
+
+	/* (non-Javadoc)
+	 * @see Utilities.StateTree#makeMove(Utilities.Move)
+	 */
+	@Override
+	public void makeMove(Move move) {
+		super.makeMove(move);
 	}
 
 }
