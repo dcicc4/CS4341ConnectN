@@ -23,7 +23,9 @@ public class AIPlayer extends Player {
 		return null;
 	}
 
-	public int getValueOfState(OurStateTree state, Integer min, Integer max) {
+
+
+	public int getValueOfState(OurStateTree state, Integer min, Integer max, int depth) {
 
 		if (state.isMyTurn) { // containsVictory checks if the state has connectedNeeded number of tiles in
 								// row for AI
@@ -38,20 +40,22 @@ public class AIPlayer extends Player {
 		}
 
 
-		LinkedList<Integer> values = new LinkedList<Integer>();
+		LinkedList<Integer> values = new LinkedList<>();
 		LinkedList<OurStateTree> states = state.getStatesAfterValidMoves();
 		if(states.isEmpty()) { //if tie return 0
 			return 0;
 		}
+		if (true){} //TODO add heuristic
+
 		for (OurStateTree aState : states) {
 			if (state.isMyTurn) {
-				int currentValue = getValueOfState(aState, min, max);
+				int currentValue = getValueOfState(aState, min, max, depth++);
 				values.push(currentValue);
 				if ((min != null && currentValue >= min) || (max != null && currentValue <= max))
 					return currentValue;
 				max = Collections.max(values);
 			} else {
-				int currentValue = getValueOfState(aState, min, max);
+				int currentValue = getValueOfState(aState, min, max, depth++);
 				values.push(currentValue);
 				if ((min != null && currentValue >= min) || (max != null && currentValue <= max))
 					return currentValue;
@@ -61,6 +65,9 @@ public class AIPlayer extends Player {
 		}
 		return state.isMyTurn ? max : min;
 	}
+
+
+
 
 	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
 		int row = state.getRowForLastMove();
