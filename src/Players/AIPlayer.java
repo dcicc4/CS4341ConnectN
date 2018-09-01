@@ -81,7 +81,14 @@ public class AIPlayer extends Player {
 		}
 
 	}
-
+	
+	/**
+	 * Checks if the player with number playerNumber has won in the state with a diagnol to the down left from piece placed
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkLeftDown(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (column < state.winNumber - 1 || row < state.winNumber - 1) {
@@ -96,7 +103,14 @@ public class AIPlayer extends Player {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Checks if the player with number playerNumber has won in the state with a diagnol to the down right from piece placed
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkRightDown(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (state.columns - column < state.winNumber || row < state.winNumber - 1) {
@@ -112,6 +126,13 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
+	/**
+	 * Checks if the player with number playerNumber has won in the state with a diagnol to the up left from piece placed
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkLeftUp(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (column < state.winNumber - 1 || state.rows - row < state.winNumber) {
@@ -127,6 +148,13 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
+	/**
+	 * Checks if the player with number playerNumber has won in the state with a diagnol to the up right from piece placed
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkRightUp(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (state.columns - column < state.winNumber || state.rows - row < state.winNumber) {
@@ -141,7 +169,14 @@ public class AIPlayer extends Player {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Checks if the player with number playerNumber has won in the state with horizontal to the left connect
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkLeftHorizontal(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (column < state.winNumber - 1) {
@@ -155,6 +190,13 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
+	/**
+	 * Checks if the player with number playerNumber has won in the state with horizontal to the right connect
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkRightHorizontal(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (state.columns - column < state.winNumber) {
@@ -168,6 +210,13 @@ public class AIPlayer extends Player {
 		return true;
 	}
 
+	/**
+	 * Checks if the player with number playerNumber has won in the state with a vertical connect
+	 * @param playerNumber
+	 * @param state
+	 * @param row
+	 * @return
+	 */
 	private boolean checkVertical(int playerNumber, OurStateTree state, int row) {
 		int column = state.lastMove.getColumn();
 		if (row < state.winNumber - 1) {
