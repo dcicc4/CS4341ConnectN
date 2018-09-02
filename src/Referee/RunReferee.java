@@ -9,9 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import Players.AIPlayer;
+import Players.BruteForcePlayer;
 import Players.Player;
-import Players.SimplePlayer1;
-import Players.SimplePlayer2;
 
 public class RunReferee {
 
@@ -20,7 +19,7 @@ public class RunReferee {
 		// Match parameter
 		// You can modify them
 		int timeLimit = 1000;
-		int boardRows = 4;
+		int boardRows = 3;
 		int boardColumns = 3;
 		int winNumber = 3;
 		int battleDurationLimit = 3600;
