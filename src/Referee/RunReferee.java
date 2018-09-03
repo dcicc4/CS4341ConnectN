@@ -9,9 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import Players.AIPlayer;
+import Players.BruteForcePlayer;
 import Players.Player;
-import Players.SimplePlayer1;
-import Players.SimplePlayer2;
 
 public class RunReferee {
 
@@ -19,17 +18,19 @@ public class RunReferee {
 		
 		// Match parameter
 		// You can modify them
-		int timeLimit = 1000;
-		int boardRows = 4;
-		int boardColumns = 3;
-		int winNumber = 3;
+		int timeLimit = 60;
+		int boardRows = 20;
+		int boardColumns = 20;
+		int winNumber = 8;
 		int battleDurationLimit = 3600;
 		// End of modifications
 		
 		
+		//Player player1 = (Player) new BruteForcePlayer("BrutePlayer1", 1, timeLimit);
+		//Player player2 = (Player) new  BruteForcePlayer("BrutePlayer2", 2, timeLimit);
 		
-		Player player1 = (Player) new AIPlayer("SimplePlayer1", 1, timeLimit);
-		Player player2 = (Player) new AIPlayer("SimplePlayer2", 2, timeLimit);
+		Player player1 = (Player) new AIPlayer("AIPlayer1", 1, timeLimit);
+		Player player2 = (Player) new AIPlayer("AIPlayer2", 2, timeLimit);
 
 		Referee referee = new Referee();
 		referee.setOut(System.out);
