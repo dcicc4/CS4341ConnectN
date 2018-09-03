@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import Referee.Referee;
 import Utilities.Move;
 import Utilities.OurStateTree;
 import Utilities.StateTree;
@@ -33,13 +32,16 @@ public class BruteForcePlayer extends Player {
 	public int getValueOfState(OurStateTree state, Integer min, Integer max, int depth) {
 
 		if (this.containsWinForPlayerNumber(Math.abs(3 - state.turn), state)) { // containsDefeat checks if the state
-			// state.display();
-			if (0 == Referee.checkForWinner(state)) {
-				return 0;
+			if (this.containsWinForPlayerNumber(Math.abs(state.turn), state)) {
+				return 0; //it is a draw as both get connect N
 			}
-			return state.turn == this.turn ? -1 : 1;
+			return state.turn == this.turn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 		}
-
+		
+		if (this.containsWinForPlayerNumber(Math.abs(state.turn), state)) {
+			return state.turn == this.turn ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+		}
+		
 		LinkedList<Integer> values = new LinkedList<Integer>();
 		LinkedList<OurStateTree> states = state.getStatesAfterValidMoves();
 		if (states.isEmpty()) { // if tie return 0

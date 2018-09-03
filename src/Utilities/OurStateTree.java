@@ -17,7 +17,10 @@ public class OurStateTree extends StateTree {
 
 
 	}
-
+	/**
+	 * Creates and stores a deep cop of a board.
+	 * @param array
+	 */
 	private void copyIntoBoardMatrix(int[][] array) {
 		boardMatrix = new int[boardMatrix.length][boardMatrix[0].length];
 		for (int i = 0; i < array.length; i++) {
@@ -27,6 +30,10 @@ public class OurStateTree extends StateTree {
 		}
 	}
 
+	/**
+	 * Gets all the states after all valid moves
+	 * @return
+	 */
 	public LinkedList<OurStateTree> getStatesAfterValidMoves() {
 		// creating the list for all the  states
 		LinkedList<OurStateTree> stateList = new LinkedList<>();
@@ -47,7 +54,10 @@ public class OurStateTree extends StateTree {
 		}
 		return stateList;
 	}
-
+	/**
+	 * Gets the row number of the last move
+	 * @return
+	 */
 	public int getRowForLastMove() {
 		if (lastMoveRow == null) {
 			int tempVal;
@@ -65,12 +75,5 @@ public class OurStateTree extends StateTree {
 		return lastMoveRow;
 	}
 
-	/* (non-Javadoc)
-	 * @see Utilities.StateTree#makeMove(Utilities.Move)
-	 */
-	@Override
-	public void makeMove(Move move) {
-		super.makeMove(move);
-	}
 
 }
