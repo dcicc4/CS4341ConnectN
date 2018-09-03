@@ -8,6 +8,7 @@ import Referee.Referee;
 import Utilities.Move;
 import Utilities.OurStateTree;
 import Utilities.StateTree;
+import Utilities.Streak;
 
 public class AIPlayer extends Player {
 
@@ -189,5 +190,94 @@ public class AIPlayer extends Player {
 
 		return true;
 	}
+
+	   /*
+    * Checks if the player is guaranteed to win on their next turn
+    * Takes in the player's number and the current tree, returns true if they'll win on their next
+    * turn no matter what.
+    *
+    * Returns false if either the
+    *
+    * */
+
+    private boolean checkGuaranteedWin(OurStateTree state) {
+        int us = state.turn, them = Math.abs(3 - state.turn);
+        int[][] board = state.getBoardMatrix();
+        int square;
+        boolean inStreak = false;
+        LinkedList<Streak> streaks = new LinkedList<>();
+        Streak curS = new Streak();
+
+        //order is [i][j] -> for this, [y][x] or [row][column]
+
+        //HORIZONTAL TRAVEL
+        for (int i = 0; i < state.rows; i++) {
+            if (inStreak){
+                curS.setRight(state.columns-1, i-1);
+                curS.capR = true;
+                if (curS.sized(state.winNumber)) {
+                    streaks.add(curS);
+                }
+                inStreak = false;
+            }
+            for (int j = 0; j < state.columns; j++) {
+                square = board[i][j];
+                if (square != 0)
+                    //System.out.println("square (" + j + ", " + i + "), = " + square);
+                    if (square == us) {
+                        if (!inStreak) {
+                            curS = new Streak();
+                            curS.setLeft(j, i);
+                            inStreak = true;
+                            if (j - 1 >= 0) {
+                                if (board[i][j - 1] == 0)
+                                    curS.capL = false;
+                                else
+                                    curS.capL = true;
+                            } else {
+                                curS.capL = true;
+                            }
+                        }
+
+                    }//square==us end
+                    else if (inStreak) {
+                        if (square == them) {
+                            curS.setRight(j-1, i);
+                            curS.capR = true;
+
+                            if (curS.sized(state.winNumber)) {
+                                streaks.add(curS);
+                            }
+                            inStreak = false;
+                        }//square==them end
+                        if (square == 0) {
+                            if ((j + 1) < state.columns) {
+                                if (board[i][j + 1] == us && !curS.gap) {
+                                    curS.setGap(j, i);
+                                } else {
+                                    curS.setRight(j-1, i);
+                                    curS.capR = false;
+                                    if (curS.sized(state.winNumber)) {
+                                        streaks.add(curS);
+                                    }
+                                    inStreak = false;
+                                }
+                            }
+                        }//square==0 end
+                    }
+            } //end of j for
+        } //end of i for
+
+        //System.out.println("\n-------\n");
+        for (Streak s : streaks) {
+            System.out.println("left (x, y): (" + s.xL + "," + s.yL + ")"
+                    + "| right (x, y): (" + s.xR + "," + s.yR + ")");
+            System.out.println("Capped on left, right, gap? " + s.capL + ", " + s.capR + ", " + s.gap);
+            System.out.println("Length: " + s.length);
+            System.out.println("-------");
+        }
+        //System.out.println("\n\n--------\n\n");
+        return true;
+    }
 
 }
