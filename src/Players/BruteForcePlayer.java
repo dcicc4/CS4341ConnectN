@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import Utilities.Move;
 import Utilities.StateTreeDCiccarelli;
 import Utilities.StateTree;
+import Utilities.Streak;
 
 public class BruteForcePlayer extends Player {
 
@@ -200,5 +201,4 @@ public class BruteForcePlayer extends Player {
 
 		return true;
 	}
-
 }

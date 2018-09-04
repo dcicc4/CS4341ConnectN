@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import Players.AIPlayerDCiccarelli;
-import Players.AIPlayer2;
 import Players.Player;
 
 public class RunReferee {
