@@ -2,16 +2,16 @@ package Utilities;
 
 import java.util.LinkedList;
 
-public class OurStateTree extends StateTree {
+public class StateTreeDCiccarelli extends StateTree {
 	public Move lastMove;
 	private Integer lastMoveRow;
 
-	public OurStateTree(StateTree t, int playerNumber) {
+	public StateTreeDCiccarelli(StateTree t, int playerNumber) {
 		super(t.rows, t.columns, t.winNumber, t.turn, t.pop1, t.pop2, t);
 		this.copyIntoBoardMatrix(t.getBoardMatrix());
 	}
 
-	public OurStateTree(OurStateTree t) {
+	public StateTreeDCiccarelli(StateTreeDCiccarelli t) {
 		super(t.rows, t.columns, t.winNumber, t.turn, t.pop1, t.pop2, t);
 		this.copyIntoBoardMatrix(t.boardMatrix);
 
@@ -34,20 +34,20 @@ public class OurStateTree extends StateTree {
 	 * Gets all the states after all valid moves
 	 * @return
 	 */
-	public LinkedList<OurStateTree> getStatesAfterValidMoves() {
+	public LinkedList<StateTreeDCiccarelli> getStatesAfterValidMoves() {
 		// creating the list for all the  states
-		LinkedList<OurStateTree> stateList = new LinkedList<>();
+		LinkedList<StateTreeDCiccarelli> stateList = new LinkedList<>();
 		//loops through each column. First makes drop moves, then checks and makes pop moves if possible.
 		for (int i=0; i < this.columns; i++){
 			//if the column is a valid move, drop a piece there and add that state to the list
 			if (validMove(new Move(false, i))){
-				stateList.add(new OurStateTree(this, turn));
+				stateList.add(new StateTreeDCiccarelli(this, turn));
 				stateList.getLast().lastMove = new Move(false, i);
 				stateList.getLast().makeMove(new Move(false, i));
 			}
 			//if the column is a valid move, pop the bottom piece there and add that state to the list
 			if (validMove(new Move(true, i))){
-				stateList.add(new OurStateTree(this, turn));
+				stateList.add(new StateTreeDCiccarelli(this, turn));
 				stateList.getLast().lastMove = new Move(true, i);
 				stateList.getLast().makeMove(new Move(true, i));
 			}

@@ -18,13 +18,14 @@ import Utilities.StateTree;
  * @author Drew Ciccarelli
  *
  */
-public class AIPlayerDCiccarelli extends Player {
+public class AIPlayer2 extends Player {
+	final double DEPTH_RATIO = 2.5; // Converts the time-columns growth ratio to the depth the algorithm can search
 	int maxDepth;
 
 	/**
 	 * @see Players.Player#Player(String, int, int)
 	 */
-	public AIPlayerDCiccarelli(String n, int t, int l) {
+	public AIPlayer2(String n, int t, int l) {
 		super(n, t, l);
 	}
 
@@ -33,10 +34,9 @@ public class AIPlayerDCiccarelli extends Player {
 	 */
 	@Override
 	public Move getMove(StateTree state) {
-		if (this.timeLimit > 15) {
-			this.maxDepth = 6;
-		}
-		this.maxDepth = 5;
+		// Get max depth using log functions as the worst case time efficienty is t=b^l
+		// so log(t)/log(b)*k = l
+		this.maxDepth = (int) (DEPTH_RATIO * Math.log(this.timeLimit) / Math.log(state.columns));
 		// Map to store values to moves
 		HashMap<Integer, StateTreeDCiccarelli> map = new HashMap<Integer, StateTreeDCiccarelli>();
 		StateTreeDCiccarelli myState = new StateTreeDCiccarelli(state, this.turn);
@@ -45,6 +45,7 @@ public class AIPlayerDCiccarelli extends Player {
 		}
 		// NOTE: chooses between equal value stages randomly
 		Integer max = Collections.max(map.keySet());
+		System.out.println(max);
 		return map.get(max).lastMove;
 	}
 
@@ -269,11 +270,11 @@ public class AIPlayerDCiccarelli extends Player {
 		if (streakSize < winNum || filledIn == 0) {
 			return 0;
 		}
-		int value =(Integer.MAX_VALUE / ((maxSize+1) - filledIn));
+		int value =(Integer.MAX_VALUE / (1+maxSize - filledIn));
 		double multiplier = 1;
 		// one hole is good but more than one is too easy to block and so is bad
 		if (holes > 1) {
-			multiplier = .4 + (1.0 / (double) holes);
+			multiplier = .4+ (1.0 / (double) holes);
 		}
 		// each way a new piece can be added is helpful
 		if (leftSize > 1) {

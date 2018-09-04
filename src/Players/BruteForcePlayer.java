@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Utilities.Move;
-import Utilities.OurStateTree;
+import Utilities.StateTreeDCiccarelli;
 import Utilities.StateTree;
 
 public class BruteForcePlayer extends Player {
@@ -19,9 +19,9 @@ public class BruteForcePlayer extends Player {
 	 */
 	@Override
 	public Move getMove(StateTree state) {
-		HashMap<Integer, OurStateTree> map = new HashMap<Integer, OurStateTree>();
-		OurStateTree myState = new OurStateTree(state, this.turn);
-		for (OurStateTree aState : myState.getStatesAfterValidMoves()) {
+		HashMap<Integer, StateTreeDCiccarelli> map = new HashMap<Integer, StateTreeDCiccarelli>();
+		StateTreeDCiccarelli myState = new StateTreeDCiccarelli(state, this.turn);
+		for (StateTreeDCiccarelli aState : myState.getStatesAfterValidMoves()) {
 			map.put(this.getValueOfState(aState, null, null, 0), aState);
 		}
 		Integer max = Collections.max(map.keySet());
@@ -29,7 +29,7 @@ public class BruteForcePlayer extends Player {
 		return map.get(max).lastMove;
 	}
 
-	public int getValueOfState(OurStateTree state, Integer min, Integer max, int depth) {
+	public int getValueOfState(StateTreeDCiccarelli state, Integer min, Integer max, int depth) {
 
 		if (this.containsWinForPlayerNumber(Math.abs(3 - state.turn), state)) { // containsDefeat checks if the state
 			if (this.containsWinForPlayerNumber(Math.abs(state.turn), state)) {
@@ -43,7 +43,7 @@ public class BruteForcePlayer extends Player {
 		}
 		
 		LinkedList<Integer> values = new LinkedList<Integer>();
-		LinkedList<OurStateTree> states = state.getStatesAfterValidMoves();
+		LinkedList<StateTreeDCiccarelli> states = state.getStatesAfterValidMoves();
 		if (states.isEmpty()) { // if tie return 0
 			return 0;
 		}
@@ -52,7 +52,7 @@ public class BruteForcePlayer extends Player {
 		Integer minLower = min;
 		Integer maxLower = max;
 
-		for (OurStateTree aState : states) {
+		for (StateTreeDCiccarelli aState : states) {
 			if (aState.turn != this.turn) {
 				int currentValue = getValueOfState(aState, minLower, maxLower, depth++);
 				values.push(currentValue);
@@ -77,7 +77,7 @@ public class BruteForcePlayer extends Player {
 		return (state.turn != this.turn) ? Collections.min(values) : Collections.max(values);
 	}
 
-	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
+	private boolean containsWinForPlayerNumber(int playerNumber, StateTreeDCiccarelli state) {
 		int row = state.getRowForLastMove();
 		if (state.lastMove.getPop()) { // for pop check if each piece in that column is now a victory
 			boolean popWin = false;
@@ -103,7 +103,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkDownDiagnol(int playerNumber, OurStateTree state, int row) {
+	private boolean checkDownDiagnol(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		int i = column;
 		int j = row;
@@ -132,7 +132,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkUpDiagnol(int playerNumber, OurStateTree state, int row) {
+	private boolean checkUpDiagnol(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		int i = column;
 		int j = row;
@@ -162,7 +162,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkHorizontal(int playerNumber, OurStateTree state, int row) {
+	private boolean checkHorizontal(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 
 		int i = column;
@@ -187,7 +187,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkVertical(int playerNumber, OurStateTree state, int row) {
+	private boolean checkVertical(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		if (row < state.winNumber - 1) {
 			return false;
