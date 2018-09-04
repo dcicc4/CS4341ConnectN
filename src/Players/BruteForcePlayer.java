@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import Utilities.Move;
-import Utilities.OurStateTree;
+import Utilities.StateTreeDCiccarelli;
 import Utilities.StateTree;
 import Utilities.Streak;
 
@@ -20,9 +20,9 @@ public class BruteForcePlayer extends Player {
 	 */
 	@Override
 	public Move getMove(StateTree state) {
-		HashMap<Integer, OurStateTree> map = new HashMap<Integer, OurStateTree>();
-		OurStateTree myState = new OurStateTree(state, this.turn);
-		for (OurStateTree aState : myState.getStatesAfterValidMoves()) {
+		HashMap<Integer, StateTreeDCiccarelli> map = new HashMap<Integer, StateTreeDCiccarelli>();
+		StateTreeDCiccarelli myState = new StateTreeDCiccarelli(state, this.turn);
+		for (StateTreeDCiccarelli aState : myState.getStatesAfterValidMoves()) {
 			map.put(this.getValueOfState(aState, null, null, 0), aState);
 		}
 		Integer max = Collections.max(map.keySet());
@@ -30,7 +30,7 @@ public class BruteForcePlayer extends Player {
 		return map.get(max).lastMove;
 	}
 
-	public int getValueOfState(OurStateTree state, Integer min, Integer max, int depth) {
+	public int getValueOfState(StateTreeDCiccarelli state, Integer min, Integer max, int depth) {
 
 		if (this.containsWinForPlayerNumber(Math.abs(3 - state.turn), state)) { // containsDefeat checks if the state
 			if (this.containsWinForPlayerNumber(Math.abs(state.turn), state)) {
@@ -44,7 +44,7 @@ public class BruteForcePlayer extends Player {
 		}
 		
 		LinkedList<Integer> values = new LinkedList<Integer>();
-		LinkedList<OurStateTree> states = state.getStatesAfterValidMoves();
+		LinkedList<StateTreeDCiccarelli> states = state.getStatesAfterValidMoves();
 		if (states.isEmpty()) { // if tie return 0
 			return 0;
 		}
@@ -53,7 +53,7 @@ public class BruteForcePlayer extends Player {
 		Integer minLower = min;
 		Integer maxLower = max;
 
-		for (OurStateTree aState : states) {
+		for (StateTreeDCiccarelli aState : states) {
 			if (aState.turn != this.turn) {
 				int currentValue = getValueOfState(aState, minLower, maxLower, depth++);
 				values.push(currentValue);
@@ -78,7 +78,7 @@ public class BruteForcePlayer extends Player {
 		return (state.turn != this.turn) ? Collections.min(values) : Collections.max(values);
 	}
 
-	private boolean containsWinForPlayerNumber(int playerNumber, OurStateTree state) {
+	private boolean containsWinForPlayerNumber(int playerNumber, StateTreeDCiccarelli state) {
 		int row = state.getRowForLastMove();
 		if (state.lastMove.getPop()) { // for pop check if each piece in that column is now a victory
 			boolean popWin = false;
@@ -104,7 +104,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkDownDiagnol(int playerNumber, OurStateTree state, int row) {
+	private boolean checkDownDiagnol(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		int i = column;
 		int j = row;
@@ -133,7 +133,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkUpDiagnol(int playerNumber, OurStateTree state, int row) {
+	private boolean checkUpDiagnol(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		int i = column;
 		int j = row;
@@ -163,7 +163,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkHorizontal(int playerNumber, OurStateTree state, int row) {
+	private boolean checkHorizontal(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 
 		int i = column;
@@ -188,7 +188,7 @@ public class BruteForcePlayer extends Player {
 	 * @param row
 	 * @return
 	 */
-	private boolean checkVertical(int playerNumber, OurStateTree state, int row) {
+	private boolean checkVertical(int playerNumber, StateTreeDCiccarelli state, int row) {
 		int column = state.lastMove.getColumn();
 		if (row < state.winNumber - 1) {
 			return false;
@@ -201,94 +201,4 @@ public class BruteForcePlayer extends Player {
 
 		return true;
 	}
-
-	   /*
-    * Checks if the player is guaranteed to win on their next turn
-    * Takes in the player's number and the current tree, returns true if they'll win on their next
-    * turn no matter what.
-    *
-    * Returns false if either the
-    *
-    * */
-
-    private boolean checkGuaranteedWin(OurStateTree state) {
-        int us = state.turn, them = Math.abs(3 - state.turn);
-        int[][] board = state.getBoardMatrix();
-        int square;
-        boolean inStreak = false;
-        LinkedList<Streak> streaks = new LinkedList<>();
-        Streak curS = new Streak();
-
-        //order is [i][j] -> for this, [y][x] or [row][column]
-
-        //HORIZONTAL TRAVEL
-        for (int i = 0; i < state.rows; i++) {
-            if (inStreak){
-                curS.setRight(state.columns-1, i-1);
-                curS.capR = true;
-                if (curS.sized(state.winNumber)) {
-                    streaks.add(curS);
-                }
-                inStreak = false;
-            }
-            for (int j = 0; j < state.columns; j++) {
-                square = board[i][j];
-                if (square != 0)
-                    //System.out.println("square (" + j + ", " + i + "), = " + square);
-                    if (square == us) {
-                        if (!inStreak) {
-                            curS = new Streak();
-                            curS.setLeft(j, i);
-                            inStreak = true;
-                            if (j - 1 >= 0) {
-                                if (board[i][j - 1] == 0)
-                                    curS.capL = false;
-                                else
-                                    curS.capL = true;
-                            } else {
-                                curS.capL = true;
-                            }
-                        }
-
-                    }//square==us end
-                    else if (inStreak) {
-                        if (square == them) {
-                            curS.setRight(j-1, i);
-                            curS.capR = true;
-
-                            if (curS.sized(state.winNumber)) {
-                                streaks.add(curS);
-                            }
-                            inStreak = false;
-                        }//square==them end
-                        if (square == 0) {
-                            if ((j + 1) < state.columns) {
-                                if (board[i][j + 1] == us && !curS.gap) {
-                                    curS.setGap(j, i);
-                                } else {
-                                    curS.setRight(j-1, i);
-                                    curS.capR = false;
-                                    if (curS.sized(state.winNumber)) {
-                                        streaks.add(curS);
-                                    }
-                                    inStreak = false;
-                                }
-                            }
-                        }//square==0 end
-                    }
-            } //end of j for
-        } //end of i for
-
-        //System.out.println("\n-------\n");
-        for (Streak s : streaks) {
-            System.out.println("left (x, y): (" + s.xL + "," + s.yL + ")"
-                    + "| right (x, y): (" + s.xR + "," + s.yR + ")");
-            System.out.println("Capped on left, right, gap? " + s.capL + ", " + s.capR + ", " + s.gap);
-            System.out.println("Length: " + s.length);
-            System.out.println("-------");
-        }
-        //System.out.println("\n\n--------\n\n");
-        return true;
-    }
-
 }

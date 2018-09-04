@@ -13,28 +13,35 @@ public class Streak {
         length = 0;
     }
 
-    public void setLeft(int x, int y) {
-        xL = x;
-        yL = y;
+    public void setLeft(int column, int row) {
+        xL = column;
+        yL = row;
     }
 
-    public void setRight(int x, int y) {
-        xR = x;
-        yR = y;
+    public void setRight(int column, int row) {
+        xR = column;
+        yR = row;
     }
 
-    public void setGap (int x, int y) {
-        xG = x;
-        yG = y;
+    public void setGap(int column, int row) {
+        xG = column;
+        yG = row;
         gap = true;
     }
 
-    public boolean sized (int winNum){
+    public boolean good(int winNum) {
         length = (xR - xL) + (yR - yL) + 1;
-        if (length >= winNum -1){
+        if (length >= winNum - 1 && (!capL || !capR)) {
             return true;
+        } else
+            return false;
+    }
+
+    public boolean posPair(Streak other) {
+        if (this.yL - this.yR == 0 && other.yL - other.yR == 0) {
+            if (Math.abs(this.yL - other.yL) == 1)
+                return true;
         }
-        else
         return false;
     }
 }
